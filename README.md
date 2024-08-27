@@ -7,7 +7,7 @@ Add New Books: Easily add new books to your collection with details like title, 
 Search Functionality: Quickly search for books by title, author, or genre.
 Delete: remove book details as needed.
 User Authentication: login system to ensure only authorized users.
-The feature of this project: This project use three way and methode for sorting and arrangeing books that include four methode :
+The feature of this project: This project use three way and methode for sorting and arrangeing books that include four methode such
     Bubble sort,qouck sort,merge sort and selection sort
 
 
