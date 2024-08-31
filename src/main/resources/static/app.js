@@ -1,130 +1,141 @@
-class BooksApp {
-    constructor() {
-        this.apiUrl = '/api/books';
-        this.currentPage = 1;
-        this.pageSize = 10;
+document.addEventListener("DOMContentLoaded", function () {
+    let currentPage = 1;
+    const pageSize = 10; // Number of books per page
 
-        this.initEventListeners();
-    }
+    // Fetch and display books
+    function fetchBooks() {
+        const sortColumn = document.getElementById("sortColumn").value;
+        const sortAlgorithm = document.getElementById("sortAlgorithm").value;
 
-    initEventListeners() {
-        document.getElementById('addBookForm').addEventListener('submit', (e) => this.addBook(e));
-        document.getElementById('searchGenreButton').addEventListener('click', () => this.searchBooks('genre'));
-        document.getElementById('searchAuthorButton').addEventListener('click', () => this.searchBooks('authorName'));
-        document.getElementById('searchNameButton').addEventListener('click', () => this.searchBooks('bookName'));
-        document.getElementById('sortButton').addEventListener('click', () => this.loadBooks());
-        document.getElementById('prevPage').addEventListener('click', () => this.changePage(-1));
-        document.getElementById('nextPage').addEventListener('click', () => this.changePage(1));
-    }
-
-    async addBook(event) {
-        event.preventDefault();
-        const bookName = document.getElementById('bookName').value;
-        const authorName = document.getElementById('authorName').value;
-        const publishYear = document.getElementById('publishYear').value;
-        const genre = document.getElementById('genre').value;
-        const audienceTypeId = document.getElementById('audienceTypeId').value;
-
-        const response = await fetch(`${this.apiUrl}/add`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({
-                bookName, authorName, publishYear, genre, audienceTypeId
+        fetch(`http://localhost:8080/api/books?page=${currentPage}&size=${pageSize}&sort=${sortColumn}&algorithm=${sortAlgorithm}`)
+            .then(response => response.json())
+            .then(data => {
+                displayBooks(data.books);
+                updatePagination(data.totalPages);
             })
-        });
-
-        if (response.ok) {
-            this.showNotification('Book added successfully!', 'success');
-            this.loadBooks();
-        } else {
-            this.showNotification('Failed to add book.', 'danger');
-        }
+            .catch(error => console.error('Error fetching books:', error));
     }
 
-    async searchBooks(field) {
-        const searchTerm = document.getElementById(`search${field.charAt(0).toUpperCase() + field.slice(1)}`).value;
-        this.loadBooks(field, searchTerm);
-    }
-
-    async loadBooks(searchField = '', searchTerm = '') {
-        const sortColumn = document.getElementById('sortColumn').value;
-        const sortAlgorithm = document.getElementById('sortAlgorithm').value;
-        const sortOrder = 'asc';
-
-        let url = `${this.apiUrl}?page=${this.currentPage - 1}&size=${this.pageSize}&sortBy=${sortColumn}&sortOrder=${sortOrder}&sortMethod=${sortAlgorithm}`;
-
-        if (searchField && searchTerm) {
-            url += `&${searchField}=${encodeURIComponent(searchTerm)}`;
-        }
-
-        const response = await fetch(url);
-
-        if (response.ok) {
-            const books = await response.json();
-            this.displayBooks(books);
-        } else {
-            this.showNotification('Failed to load books.', 'danger');
-        }
-    }
-
-    displayBooks(books) {
-        const booksTable = document.getElementById('booksTable');
-        booksTable.innerHTML = '';
+    // Display books in the table
+    function displayBooks(books) {
+        const booksTable = document.getElementById("booksTable");
+        booksTable.innerHTML = "";
 
         books.forEach(book => {
-            const row = `
-                <tr>
-                    <td>${book.id}</td>
-                    <td>${book.bookName}</td>
-                    <td>${book.authorName}</td>
-                    <td>${book.publishYear}</td>
-                    <td>${book.genre}</td>
-                    <td>${book.audienceType}</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm" onclick="app.editBook(${book.id})">Edit</button>
-                        <button class="btn btn-danger btn-sm" onclick="app.deleteBook(${book.id})">Delete</button>
-                    </td>
-                </tr>
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${book.id}</td>
+                <td>${book.bookName}</td>
+                <td>${book.authorName}</td>
+                <td>${book.publishYear}</td>
+                <td>${book.genre}</td>
+                <td>${book.audienceType}</td>
+                <td>
+                    <button class="btn btn-danger" onclick="deleteBook(${book.id})">Delete</button>
+                </td>
             `;
-            booksTable.insertAdjacentHTML('beforeend', row);
-        });
 
-        document.getElementById('currentPage').textContent = this.currentPage;
+            booksTable.appendChild(row);
+        });
     }
 
-    async deleteBook(id) {
-        const response = await fetch(`${this.apiUrl}/${id}`, {
-            method: 'DELETE'
-        });
+    // Update pagination controls
+    function updatePagination(totalPages) {
+        document.getElementById("currentPage").textContent = `Page ${currentPage} of ${totalPages}`;
+        document.getElementById("prevPage").disabled = currentPage === 1;
+        document.getElementById("nextPage").disabled = currentPage === totalPages;
+    }
 
-        if (response.ok) {
-            this.showNotification('Book deleted successfully!', 'success');
-            this.loadBooks();
-        } else {
-            this.showNotification('Failed to delete book.', 'danger');
+    // Handle adding a new book
+    document.getElementById("addBookForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const newBook = {
+            bookName: document.getElementById("bookName").value,
+            authorName: document.getElementById("authorName").value,
+            publishYear: document.getElementById("publishYear").value,
+            genre: document.getElementById("genre").value,
+            audienceTypeId: document.getElementById("audienceTypeId").value
+        };
+
+        fetch("http://localhost:8080/api/books", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newBook)
+        })
+            .then(response => response.json())
+            .then(() => {
+                alert("Book added successfully!");
+                fetchBooks(); // Refresh the list
+            })
+            .catch(error => console.error('Error adding book:', error));
+    });
+
+    // Handle searching by genre
+    document.getElementById("searchGenreButton").addEventListener("click", function () {
+        const genre = document.getElementById("searchGenre").value;
+
+        fetch(`http://localhost:8080/api/books/search?genre=${genre}`)
+            .then(response => response.json())
+            .then(data => displayBooks(data))
+            .catch(error => console.error('Error searching by genre:', error));
+    });
+
+    // Handle searching by author
+    document.getElementById("searchAuthorButton").addEventListener("click", function () {
+        const author = document.getElementById("searchAuthor").value;
+
+        fetch(`http://localhost:8080/api/books/search?authorName=${author}`)
+            .then(response => response.json())
+            .then(data => displayBooks(data))
+            .catch(error => console.error('Error searching by author:', error));
+    });
+
+    // Handle searching by book name
+    document.getElementById("searchNameButton").addEventListener("click", function () {
+        const bookName = document.getElementById("searchName").value;
+
+        fetch(`http://localhost:8080/api/books/search?bookName=${bookName}`)
+            .then(response => response.json())
+            .then(data => displayBooks(data))
+            .catch(error => console.error('Error searching by book name:', error));
+    });
+
+    // Handle sorting
+    document.getElementById("sortButton").addEventListener("click", function () {
+        fetchBooks(); // Fetch and display books with the selected sort options
+    });
+
+    // Handle pagination
+    document.getElementById("prevPage").addEventListener("click", function () {
+        if (currentPage > 1) {
+            currentPage--;
+            fetchBooks();
         }
-    }
+    });
 
-    async editBook(id) {
-        // You can implement the edit functionality similarly by pre-filling the form with the book's data.
-    }
+    document.getElementById("nextPage").addEventListener("click", function () {
+        currentPage++;
+        fetchBooks();
+    });
 
-    changePage(change) {
-        this.currentPage += change;
-        this.loadBooks();
-    }
+    // Initial fetch
+    fetchBooks();
+});
 
-    showNotification(message, type) {
-        const notification = document.getElementById('notification');
-        notification.className = `alert alert-${type}`;
-        notification.textContent = message;
-        notification.classList.remove('d-none');
-
-        setTimeout(() => notification.classList.add('d-none'), 3000);
+// Function to delete a book
+function deleteBook(bookId) {
+    if (confirm("Are you sure you want to delete this book?")) {
+        fetch(`http://localhost:8080/api/books/${bookId}`, {
+            method: "DELETE"
+        })
+            .then(() => {
+                alert("Book deleted successfully!");
+                fetchBooks(); // Refresh the list
+            })
+            .catch(error => console.error('Error deleting book:', error));
     }
 }
-
-// Initialize the BooksApp
-const app = new BooksApp();
