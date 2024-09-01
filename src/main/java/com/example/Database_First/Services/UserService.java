@@ -23,10 +23,9 @@ public class UserService {
     }
 
 
-    // Get all users
-//    public List<UserEntity> getAllUsers() {
-//        return userRepository.findAll();
-//    }
+    public List<UserEntity> getAllUsers() {
+        return userRepository.findAll();
+    }
 
     // Get user by ID
 //    public Optional<UserEntity> getUserById(Long id) {
