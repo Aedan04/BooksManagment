@@ -93,7 +93,297 @@ createUser: it will make new User that using the User entity proprety and add it
 #Controller
 And we have two controller for this project :
 first is User Controller that have two methode for Login and sign up and call all User Service metode.
+
+
+authenticateUser
+
+URL:http://localhost:8080/api/users/authenticate
+Method: POST
+
+
+
+Usage: with this Service User can authenticate and log in 
+Input parameters: UserName , Password 
+ input exmaple : 
+{
+  "userName": "string",
+  "password": "string"
+}
+
+
+output:
+
+{
+  "id": 14,
+  "userName": "string",
+  "password": "string",
+  "name": "string",
+  "lastName": "string",
+  "bookName": "string"
+}
+
+
+
+
+createUser
+
+
+
+URL:http://localhost:8080/api/users
+Method: POST
+
+Usage: this service is for sign up and create new user
+Input parameters: UserName , Password  , name , lastName , bookName.
+output : new user
+
+
+input Test : 
+[
+{
+  "userName": "test",
+  "password": "test",
+  "name": "test",
+  "lastName": "test",
+  "bookName": "test"
+}
+output Test:{
+  "id": 15,
+  "userName": "test",
+  "password": "test",
+  "name": "test",
+  "lastName": "test",
+  "bookName": "test"
+}
+
 the second class for books that have all CRUD opration such a get,post,Put,Delete methode and call all book service method.
+getBooks
+
+ Add a New Book
+
+URL: /api/Books/add
+Method: POST
+Usage: This endpoint allows you to add a new book to the database.
+Input Parameters:
+bookName (String)
+authorName (String)
+publishYear (int)
+genre (String)
+audienceTypeId (Long)
+Output Example:
+json
+{
+  "id": 1,
+  "bookName": "string",
+  "authorName": "string",
+  "publishYear": 2024,
+  "genre": "string",
+  "audienceType": {
+    "id": 1,
+    "audienceType": "string"
+  }
+}
+2. Update an Existing Book
+
+URL: /api/Books/{id}
+Method: PUT
+Usage: This endpoint allows you to update the details of an existing book by its ID.
+Input Parameters:
+id (Path Variable, Long)
+bookName (String)
+authorName (String)
+publishYear (int)
+genre (String)
+audienceTypeId (Long)
+Output Example:
+json
+{
+  "id": 1,
+  "bookName": "string",
+  "authorName": "string",
+  "publishYear": 2024,
+  "genre": "string",
+  "audienceType": {
+    "id": 1,
+    "audienceType": "string"
+  }
+}
+3. Delete a Book
+
+URL: /api/Books/{id}
+Method: DELETE
+Usage: This endpoint allows you to delete a book by its ID.
+Input Parameter:
+id (Path Variable, Long)
+Output Example:
+Success: "Book deleted successfully!"
+Error: "Book not found!"
+4. Search Books by Name with Pagination
+
+URL: /api/Books/search/name/paginated
+Method: GET
+Usage: This endpoint allows you to search for books by their name with pagination and sorting.
+Input Parameters:
+bookName (String)
+page (int)
+size (int)
+sortBy (String, default: "bookName")
+sortOrder (String, default: "asc")
+Output Example:
+json
+{
+  "content": 
+    {
+      "id": 1,
+      "bookName": "string",
+      "authorName": "string",
+      "publishYear": 2024,
+      "genre": "string",
+      "audienceType": {
+        "id": 1,
+        "audienceType": "string"
+      }
+    }
+  ,
+  "totalPages": 1,
+  "totalElements": 1,
+  "size": 10,
+  "number": 0,
+  "sort": [
+    {
+      "property": "bookName",
+      "direction": "ASC"
+    }
+  ]
+}
+5. Search Books by Genre with Pagination
+
+URL: /api/Books/search/genre/paginated
+Method: GET
+Usage: This endpoint allows you to search for books by their genre with pagination and sorting.
+Input Parameters:
+genre (String)
+page (int)
+size (int)
+sortBy (String, default: "genre")
+sortOrder (String, default: "asc")
+Output Example:
+json
+{
+  "content": 
+    {
+      "id": 1,
+      "bookName": "string",
+      "authorName": "string",
+      "publishYear": 2024,
+      "genre": "string",
+      "audienceType": {
+        "id": 1,
+        "audienceType": "string"
+      }
+    }
+  ,
+  "totalPages": 1,
+  "totalElements": 1,
+  "size": 10,
+  "number": 0,
+  "sort": 
+    {
+      "property": "genre",
+      "direction": "ASC"
+    }
+  
+}
+6. Search Books by Author with Pagination
+
+URL: /api/Books/search/author/paginated
+Method: GET
+Usage: This endpoint allows you to search for books by their author's name with pagination and sorting.
+Input Parameters:
+authorName (String)
+page (int)
+size (int)
+sortBy (String, default: "authorName")
+sortOrder (String, default: "asc")
+Output Example:
+json
+{
+  "content": 
+    {
+      "id": 1,
+      "bookName": "string",
+      "authorName": "string",
+      "publishYear": 2024,
+      "genre": "string",
+      "audienceType": {
+        "id": 1,
+        "audienceType": "string"
+      }
+    }
+  ,
+  "totalPages": 1,
+  "totalElements": 1,
+  "size": 10,
+  "number": 0,
+  "sort": 
+    {
+      "property": "authorName",
+      "direction": "ASC"
+    }
+  
+}
+7. Get All Books with Sorting
+
+URL: /api/Books
+Method: GET
+Usage: This endpoint allows you to retrieve all books with pagination, sorting by a selected method.
+Input Parameters:
+page (int)
+size (int)
+sortBy (String, default: "id")
+sortOrder (String, default: "asc")
+sortMethod (String, default: "bubble")
+Output Example:
+json
+
+  {
+    "id": 1,
+    "bookName": "string",
+    "authorName": "string",
+    "publishYear": 2024,
+    "genre": "string",
+    "audienceType": {
+      "id": 1,
+      "audienceType": "string"
+    }
+  }
+
+8. Search Books with Multiple Filters
+
+URL: /api/Books/search
+Method: GET
+Usage: This endpoint allows you to search for books by various filters such as book name, genre, and author, with sorting by a selected method.
+Input Parameters:
+bookName (String, optional, default: "")
+genre (String, optional, default: "")
+authorName (String, optional, default: "")
+sortBy (String, default: "bookName")
+sortOrder (String, default: "asc")
+sortMethod (String, default: "bubble")
+Output Example:
+json
+
+  {
+    "id": 1,
+    "bookName": "string",
+    "authorName": "string",
+    "publishYear": 2024,
+    "genre": "string",
+    "audienceType": {
+      "id": 1,
+      "audienceType": "string"
+    }
+  }
+
 
 
 
