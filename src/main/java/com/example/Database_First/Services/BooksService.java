@@ -50,7 +50,7 @@ public class BooksService {
     }
 
     public Page<BooksEntity> getBooksByBookNameWithPagination(String bookName, int page, int size, String sortBy, String sortOrder) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortOrder), sortBy));
+            Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortOrder), sortBy));
         return booksRepository.findByBookNameContainingIgnoreCase(bookName, pageable);
     }
 
@@ -64,13 +64,13 @@ public class BooksService {
         return booksRepository.findByAuthorNameContainingIgnoreCase(authorName, pageable);
     }
 
-    public List<BooksEntity> getAllBooks(int page, int size, String sortBy, String sortOrder, String sortMethod) {
+        public List<BooksEntity> getAllBooks(int page, int size, String sortBy, String sortOrder, String sortMethod) {
         List<BooksEntity> books = booksRepository.findAll();
         List<BooksEntity> sortedBooks = sortBooks(books, sortBy, sortOrder, sortMethod);
 
         // Apply pagination
-        int fromIndex = Math.min(page * size, sortedBooks.size());
-        int toIndex = Math.min(fromIndex + size, sortedBooks.size());
+            int fromIndex = Math.min(page * size, sortedBooks.size());
+            int toIndex = Math.min(fromIndex + size, sortedBooks.size());
         return sortedBooks.subList(fromIndex, toIndex);
     }
 

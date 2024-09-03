@@ -23,7 +23,7 @@ public class UserController {
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
     // Authenticate user
-    @PostMapping("/authenticate")
+        @PostMapping("/authenticate")
     public ResponseEntity<UserEntity> authenticateUser(@RequestBody UserEntity user) {
         Optional<UserEntity> authenticatedUser = userService.authenticateUser(user.getUserName(), user.getPassword());
         return authenticatedUser.map(value -> new ResponseEntity<>(value, HttpStatus.OK))

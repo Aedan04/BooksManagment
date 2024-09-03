@@ -18,7 +18,7 @@ public class BooksController {
     private BooksService booksService;
 
     @PostMapping("/add")
-    public ResponseEntity<BooksEntity> addBook(@RequestParam String bookName,
+        public ResponseEntity<BooksEntity> addBook(@RequestParam String bookName,
                                                @RequestParam String authorName,
                                                @RequestParam int publishYear,
                                                @RequestParam String genre,
@@ -83,9 +83,9 @@ public class BooksController {
     public ResponseEntity<List<BooksEntity>> getBooks(
             @RequestParam int page,
             @RequestParam int size,
-            @RequestParam String sortBy,
-            @RequestParam String sortOrder,
-            @RequestParam String sortMethod) {
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortOrder,
+            @RequestParam(defaultValue = "bubble") String sortMethod) {
         List<BooksEntity> books = booksService.getAllBooks(page, size, sortBy, sortOrder, sortMethod);
         return ResponseEntity.ok(books);
     }
