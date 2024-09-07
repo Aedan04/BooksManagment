@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
@@ -15,70 +16,56 @@
         </div>
     </nav>
 
-    <div class="container">
-        <h2>Your Book Collection</h2>
+    <!-- Book Management Interface -->
+    <section>
         <div>
-            <!-- Search inputs for genre, author, book name -->
+            <!-- Search & Sorting Inputs -->
             <input type="text" id="searchGenre" placeholder="Search by Genre">
             <button id="searchGenreButton">Search</button>
 
             <input type="text" id="searchAuthor" placeholder="Search by Author">
             <button id="searchAuthorButton">Search</button>
 
-            <input type="text" id="searchName" placeholder="Search by Book Name">
+            <input type="text" id="searchName" placeholder="Search by Name">
             <button id="searchNameButton">Search</button>
+
+            <select id="sortColumn">
+                <option value="bookName">Book Name</option>
+                <option value="authorName">Author</option>
+            </select>
+
+            <select id="sortAlgorithm">
+                <option value="bubble">Bubble Sort</option>
+                <option value="quick">Quick Sort</option>
+            </select>
+            <button id="sortButton">Sort</button>
         </div>
 
-        <!-- Book table -->
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Book Name</th>
-                <th>Author</th>
-                <th>Publish Year</th>
-                <th>Genre</th>
-                <th>Audience Type</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody id="booksTable"></tbody>
-        </table>
-
-        <!-- Pagination controls -->
         <div>
-            <button id="prevPage">Previous</button>
-            <span id="currentPage">Page 1</span>
-            <button id="nextPage">Next</button>
+            <!-- Table of Books -->
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Author</th>
+                    <th>Year</th>
+                    <th>Genre</th>
+                    <th>Audience</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="booksTable"></tbody>
+            </table>
         </div>
 
-        <!-- Sorting options -->
-        <select id="sortColumn">
-            <option value="bookName">Book Name</option>
-            <option value="authorName">Author</option>
-            <option value="publishYear">Publish Year</option>
-            <option value="genre">Genre</option>
-        </select>
-        <select id="sortAlgorithm">
-            <option value="bubbleSort">Bubble Sort</option>
-            <option value="quickSort">Quick Sort</option>
-            <option value="mergeSort">Merge Sort</option>
-            <option value="selectionSort">Selection Sort</option>
-        </select>
-        <button id="sortButton">Sort</button>
-    </div>
+        <!-- Pagination -->
+        <button id="prevPage">Previous</button>
+        <span id="currentPage">Page 1</span>
+        <button id="nextPage">Next</button>
+    </section>
 </div>
 
-<!-- Load BooksManager -->
 <script src="app.js"></script>
-<script>
-    // Check if user is authenticated
-    if (!localStorage.getItem('isAuthenticated')) {
-        window.location.href = "index.html"; // Redirect to login if not authenticated
-    } else {
-        // Initialize the book manager if authenticated
-        const booksManager = new BooksManager();
-    }
-</script>
 </body>
 </html>

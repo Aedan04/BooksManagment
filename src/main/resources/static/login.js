@@ -33,7 +33,10 @@ document.getElementById("login").addEventListener("submit", function (event) {
         })
         .then(data => {
             alert("Login successful!");
-            localStorage.setItem('isAuthenticated', true);
+            // Store user data (if needed)
+            localStorage.setItem("user", JSON.stringify(data));
+
+            // Redirect to main.html
             window.location.href = "main.html";
         })
         .catch(error => {
