@@ -1,7 +1,7 @@
 // Define constants for API endpoints and default values
 const API_URL = 'http://localhost:8080/api/Books';
-const DEFAULT_PAGE = 1;
-const DEFAULT_SIZE = 10;
+const DEFAULT_PAGE = 0; // API uses 0-based indexing
+const DEFAULT_SIZE = 5;
 const DEFAULT_SORT_BY = 'id';
 const DEFAULT_SORT_ORDER = 'asc';
 const DEFAULT_SORT_METHOD = 'bubble';
