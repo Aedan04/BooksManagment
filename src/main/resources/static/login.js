@@ -33,7 +33,7 @@ document.getElementById("login").addEventListener("submit", function (event) {
         })
         .then(data => {
             alert("Login successful!");
-            // Redirect to main.html
+            localStorage.setItem('isAuthenticated', true);
             window.location.href = "main.html";
         })
         .catch(error => {
