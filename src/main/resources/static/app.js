@@ -1,6 +1,6 @@
 class BooksManager {
     constructor() {
-        this.apiBaseUrl = 'http://localhost:8080/api/Books';
+        this.apiBaseUrl = 'http://localhost:8080/main.html';
         this.currentPage = 0;
         this.pageSize = 5;
 
