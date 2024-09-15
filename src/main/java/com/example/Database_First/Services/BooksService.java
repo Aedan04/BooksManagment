@@ -42,6 +42,13 @@ public class BooksService {
         return booksRepository.save(existingBook);
     }
 
+    public List<BooksEntity> searchBooks(String bookName, String genre, String authorName) {
+        return booksRepository.findByBookNameContainingIgnoreCaseAndGenreContainingIgnoreCaseAndAuthorNameContainingIgnoreCase(
+                bookName != null ? bookName : "",
+                genre != null ? genre : "",
+                authorName != null ? authorName : ""
+        );
+    }
     public void deleteBook(Long id) {
         if (!booksRepository.existsById(id)) {
             throw new IllegalArgumentException("Book with ID " + id + " does not exist.");

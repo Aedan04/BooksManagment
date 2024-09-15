@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +28,16 @@ public class BooksController {
         return ResponseEntity.status(HttpStatus.CREATED).body(book);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+        try {
+            booksService.deleteBook(id);
+            return ResponseEntity.noContent().build(); // No content, successful deletion
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Book not found
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<BooksEntity> updateBook(@PathVariable Long id,
                                                   @RequestParam String bookName,
@@ -42,15 +53,17 @@ public class BooksController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteBook(@PathVariable Long id) {
-        try {
-            booksService.deleteBook(id);
-            return ResponseEntity.ok("Book deleted successfully!");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<String> deleteBook(@PathVariable Long id) {
+//        try {
+//            booksService.deleteBook(id);
+//            return ResponseEntity.ok("Book deleted successfully!");
+//        } catch (IllegalArgumentException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        }
+//    }
+
+
 
     @GetMapping("/search/name/paginated")
     public Page<BooksEntity> searchBooksByBookNameWithPagination(@RequestParam String bookName,
@@ -90,6 +103,15 @@ public class BooksController {
         return ResponseEntity.ok(books);
     }
 
+    @Controller
+    public class HomeController {
+
+        @GetMapping("/")
+        public String redirectToLogin() {
+            return "redirect:/login.html";  // Redirect to the login page first
+        }
+    }
+
 
     @GetMapping("/search")
     public ResponseEntity<List<BooksEntity>> searchBooks(
@@ -98,8 +120,9 @@ public class BooksController {
             @RequestParam(required = false, defaultValue = "") String authorName,
             @RequestParam(defaultValue = "bookName") String sortBy,
             @RequestParam(defaultValue = "asc") String sortOrder,
-            @RequestParam(defaultValue = "bubble") String sortMethod) {
+            @RequestParam(defaultValue = "merge") String sortMethod) {
         List<BooksEntity> books = booksService.searchBooks(bookName, genre, authorName, sortBy, sortOrder, sortMethod);
         return ResponseEntity.ok(books);
     }
+
 }

@@ -15,4 +15,5 @@ public interface BooksRepository extends JpaRepository<BooksEntity, Long> {
     List<BooksEntity> findByBookNameContainingIgnoreCaseAndGenreContainingIgnoreCaseAndAuthorNameContainingIgnoreCase(
             String bookName, String genre, String authorName);
 
+
 }
